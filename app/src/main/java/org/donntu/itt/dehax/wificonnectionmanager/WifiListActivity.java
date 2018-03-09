@@ -106,27 +106,22 @@ public class WifiListActivity extends AppCompatActivity {
             }
         };
         wifiStateReceiver = new WifiStateReceiver();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
 
         IntentFilter filterWifiState = new IntentFilter();
         filterWifiState.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
         filterWifiState.addAction(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION);
         filterWifiState.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
-//        registerReceiver(wifiStateReceiver, filterWifiState);
+        registerReceiver(wifiStateReceiver, filterWifiState);
 
         registerReceiver(wifiScanResultsReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onDestroy() {
+        super.onDestroy();
 
         unregisterReceiver(wifiScanResultsReceiver);
-//        unregisterReceiver(wifiStateReceiver);
+        unregisterReceiver(wifiStateReceiver);
     }
 
     public void onWifiScanResultsReceived() {
@@ -136,6 +131,6 @@ public class WifiListActivity extends AppCompatActivity {
             ScanResult scanResult = scanResultList.get(i);
             bssidArray[i] = scanResult.SSID + " (" + scanResult.BSSID + ")";
         }
-        wifiListView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, bssidArray));
+        wifiListView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, bssidArray));
     }
 }

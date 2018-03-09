@@ -1,7 +1,6 @@
 package org.donntu.itt.dehax.wificonnectionmanager;
 
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -21,7 +20,6 @@ public class WifiStateReceiver extends BroadcastReceiver {
         assert action != null;
         switch (action) {
             case WifiManager.WIFI_STATE_CHANGED_ACTION:
-                Toast.makeText(context, "WIFI_STATE_CHANGED_ACTION", Toast.LENGTH_SHORT).show();
                 int state = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, -1);
 
                 switch (state) {
@@ -31,8 +29,14 @@ public class WifiStateReceiver extends BroadcastReceiver {
                     case WifiManager.WIFI_STATE_DISABLED:
                         showNotification(context, "Wi-Fi state changed", "Wi-Fi disabled!");
                         break;
+                    case WifiManager.WIFI_STATE_ENABLING:
+                        showNotification(context, "Wi-Fi state changed", "Wi-Fi is currently being enabled");
+                        break;
+                    case WifiManager.WIFI_STATE_DISABLING:
+                        showNotification(context, "Wi-Fi state changed", "Wi-Fi is currently being disabled");
+                        break;
                     default:
-                        Toast.makeText(context, "Error! Unsupported state!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Error! Unsupported state!", Toast.LENGTH_LONG).show();
                         break;
                 }
                 break;
@@ -54,7 +58,7 @@ public class WifiStateReceiver extends BroadcastReceiver {
                 }
                 break;
             default:
-                Toast.makeText(context, "Error! Unknown action!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Error! Unknown action!", Toast.LENGTH_LONG).show();
                 break;
         }
     }
